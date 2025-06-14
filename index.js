@@ -31,4 +31,79 @@ class Tree {
     };
     this.root = build(sortedArray);
   }
+
+  prettyPrint = (node = this.root, prefix = "", isLeft = true) => {
+    if (node === null) {
+      return;
+    }
+    if (node.right !== null) {
+      this.prettyPrint(
+        node.right,
+        `${prefix}${isLeft ? "│   " : "    "}`,
+        false
+      );
+    }
+    console.log(`${prefix}${isLeft ? "└── " : "┌── "}${node.value}`);
+    if (node.left !== null) {
+      this.prettyPrint(node.left, `${prefix}${isLeft ? "    " : "│   "}`, true);
+    }
+  };
+
+  insert(value) {
+    const traverse = (node, value) => {
+      if (node === null) {
+        return new Node(value);
+      }
+      if (node.value === value) {
+        return node;
+      }
+      if (node.value > value) {
+        node.left = traverse(node.left, value);
+      } else if (node.value < value) {
+        node.right = traverse(node.right, value);
+      }
+      return node;
+    };
+    this.root = traverse(this.root, value);
+  }
+
+  delete(value) {
+    const traverse = (node, value) => {
+      if (node === null) {
+        return null;
+      }
+
+      if (node.value > value) {
+        node.left = traverse(node.left, value);
+      } else if (node.value < value) {
+        node.right = traverse(node.right, value);
+      }
+
+      if (node.left === null && node.right === null) {
+        return null;
+      }
+      if (node.left === null) {
+        return node.right;
+      }
+      if (node.right === null) {
+        return node.left;
+      } else {
+        let successor = node.right;
+        while (successor.left !== null) {
+          successor = successor.left;
+        }
+        node.value = successor.value;
+        node.right = traverse(node.right, successor.value);
+
+        return node;
+      }
+    };
+    this.root = traverse(this.root, value);
+  }
 }
+
+const tree = new Tree();
+tree.buildTree([7, 3, 1, 5, 10, 12]);
+tree.prettyPrint();
+tree.delete(7);
+tree.prettyPrint();
