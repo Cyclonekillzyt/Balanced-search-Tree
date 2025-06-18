@@ -100,10 +100,46 @@ class Tree {
     };
     this.root = traverse(this.root, value);
   }
+  find(value) {
+    const traverse = (node, value) => {
+      if (node === null) {
+        throw new Error("build tree first");
+      }
+      if (node.value === value) {
+        return node;
+      } else if (node.value > value) {
+        return traverse(node.left, value);
+      } else if (node.value < value) {
+        return traverse(node.right, value);
+      }
+    };
+    return traverse(this.root, value);
+  }
+
+  levelOrder(callback) {
+    if (typeof callback !== "function") {
+      throw new Error("Please provide a valid function");
+    }
+    let queue = [];
+
+    
+    if (this.root) {
+      queue.push(this.root);
+    }
+    while (queue.length > 0) {
+      const current = queue.shift();
+      callback(current);
+      if (current.left) {
+        queue.push(current.left);
+      }
+      if (current.right) {
+        queue.push(current.right);
+      }
+    }
+  }
 }
 
 const tree = new Tree();
 tree.buildTree([7, 3, 1, 5, 10, 12]);
 tree.prettyPrint();
-tree.delete(7);
-tree.prettyPrint();
+console.log(tree.find(7));
