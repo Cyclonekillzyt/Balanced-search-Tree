@@ -142,7 +142,7 @@ class Tree {
       throw new Error("Please provide a valid function");
     }
     const traverse = (node) => {
-      if (node === null) {
+      if (node ) {
         return;
       }
       traverse(node.left);
@@ -156,7 +156,7 @@ class Tree {
       throw new Error("Please provide a valid function");
     }
     const traverse = (node) => {
-      if (node === null) {
+      if (!node) {
         return;
       }
       callback(node.value);
@@ -171,7 +171,7 @@ class Tree {
       throw new Error("Please provide a valid function");
     }
     const traverse = (node) => {
-      if (node === null) {
+      if (!node) {
         return;
       }
       traverse(node.left);
@@ -182,8 +182,8 @@ class Tree {
   }
 
   height(value) {
-    const node = this.find(value)
-    if (node === null) {
+    const node = this.find(value);
+    if (!node) {
       return null;
     }
     const traverse = (node) => {
@@ -194,12 +194,12 @@ class Tree {
       let right = traverse(node.right);
       return 1 + Math.max(left, right);
     };
-    return traverse(node) -1;
+    return traverse(node) - 1;
   }
 
   depth(value) {
     const traverse = (node, depth = 0) => {
-      if (node === null) {
+      if (!node) {
         return null;
       }
       if (node.value === value) {
@@ -213,24 +213,64 @@ class Tree {
     };
     return traverse(this.root, value);
   }
+
+  isBalanced() {
+    const check = (node) => {
+      if (!node) {
+        return 0;
+      }
+      const leftHeight = check(node.left);
+      if (leftHeight === -1) {
+        return -1;
+      }
+      const rightHeight = check(node.right);
+      if (rightHeight === -1) {
+        return -1;
+      }
+      if (Math.abs(leftHeight - rightHeight) > 1) {
+        return -1;
+      }
+      return 1 + Math.max(leftHeight, rightHeight);
+    };
+    return check(this.root) !== -1;
+  }
+
+  rebalance() {
+    if (this.isBalanced()) {
+      return;
+    }
+    let array = [];
+    this.inOrder((value) => {
+      array.push(value);
+    });
+    this.root = this.buildTree(array);
+  }
 }
 
-const tree = new Tree();
-tree.buildTree([7, 3, 1, 5, 10, 12]);
-tree.prettyPrint();
-console.log(tree.find(7));
-const print = (value) => console.log(value);
+const test = () => {
+  let array = [];
+  const arraySize = Math.floor(Math.random() * 100);
+  for (let i = 0; i < arraySize; i++) {
+    array.push(Math.floor(Math.random() * 100));
+  }
+  const tree = new Tree();
+  tree.buildTree(array);
+  tree.isBalanced();
+  const print = (value) => console.log(value);
+  tree.levelOrder(print);
+  tree.preOrder(print);
+  tree.postOrder(print);
+  tree.inOrder(print)
+  for (let i = 0; i < Math.floor(Math.random() * 10); i++){
+    tree.insert(Math.floor(Math.random() * 10) + 100);
+  }
+  tree.rebalance();
+  tree.isBalanced();
+  tree.levelOrder(print);
+  tree.preOrder(print);
+  tree.postOrder(print);
+  tree.inOrder(print);
+  tree.prettyPrint()
+};
 
-console.log("In-order:");
-tree.inOrder(print); // Expected: 3, 5, 7, 10, 12, 15, 18
-
-console.log("Pre-order:");
-tree.preOrder(print); // Expected: 10, 5, 3, 7, 15, 12, 18
-
-console.log("Post-order:");
-tree.postOrder(print); // Expected: 3, 7, 5, 12, 18, 15, 10
-
-console.log("Level-order:");
-tree.levelOrder(print);
-
-console.log(`tree of depth : ${tree.depth(10)}`);
+test();
