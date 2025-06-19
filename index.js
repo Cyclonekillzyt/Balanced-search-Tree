@@ -33,7 +33,7 @@ class Tree {
   }
 
   prettyPrint = (node = this.root, prefix = "", isLeft = true) => {
-    if (node === null) {
+    if (!node) {
       return;
     }
     if (node.right !== null) {
@@ -51,7 +51,7 @@ class Tree {
 
   insert(value) {
     const traverse = (node, value) => {
-      if (node === null) {
+      if (!node) {
         return new Node(value);
       }
       if (node.value === value) {
@@ -69,7 +69,7 @@ class Tree {
 
   delete(value) {
     const traverse = (node, value) => {
-      if (node === null) {
+      if (!node) {
         return null;
       }
 
@@ -102,7 +102,7 @@ class Tree {
   }
   find(value) {
     const traverse = (node, value) => {
-      if (node === null) {
+      if (!node) {
         throw new Error("build tree first");
       }
       if (node.value === value) {
@@ -142,7 +142,7 @@ class Tree {
       throw new Error("Please provide a valid function");
     }
     const traverse = (node) => {
-      if (node === null) {
+      if (!node) {
         return;
       }
       traverse(node.left);
@@ -156,7 +156,7 @@ class Tree {
       throw new Error("Please provide a valid function");
     }
     const traverse = (node) => {
-      if (node === null) {
+      if (!node) {
         return;
       }
       callback(node.value);
@@ -171,7 +171,7 @@ class Tree {
       throw new Error("Please provide a valid function");
     }
     const traverse = (node) => {
-      if (node === null) {
+      if (!node) {
         return;
       }
       traverse(node.left);
@@ -187,7 +187,7 @@ class Tree {
       return null;
     }
     const traverse = (node) => {
-      if (node === null) {
+      if (!node) {
         return 0;
       }
       let left = traverse(node.left);
@@ -216,7 +216,7 @@ class Tree {
 
   isBalanced() {
     const check = (node) => {
-      if (node === null) {
+      if (!node) {
         return 0;
       }
       const leftHeight = check(node.left);
@@ -237,17 +237,18 @@ class Tree {
 
   rebalance() {
     if (this.isBalanced()) {
-      return;
+      return this.root;
     }
     let array = [];
     this.inOrder((value) => {
       array.push(value);
     });
-    this.root = this.buildTree(array);
+    this.buildTree(array);
   }
 }
 
 const test = () => {
+  let array = [];
   const arraySize = Math.floor(Math.random() * 20) + 10; 
   for (let i = 0; i < arraySize; i++) {
     array.push(Math.floor(Math.random() * 100));
@@ -281,10 +282,8 @@ const test = () => {
 
   console.log("\nTree after unbalancing:");
   tree.prettyPrint();
-
   console.log("\nRebalancing the tree...");
   tree.rebalance();
-
   console.log("\nIs the tree balanced after rebalance? ➤", tree.isBalanced());
 
   console.log("\nTree after rebalancing:");
