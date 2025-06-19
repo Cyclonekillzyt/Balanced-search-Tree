@@ -142,7 +142,7 @@ class Tree {
       throw new Error("Please provide a valid function");
     }
     const traverse = (node) => {
-      if (node ) {
+      if (node === null) {
         return;
       }
       traverse(node.left);
@@ -156,7 +156,7 @@ class Tree {
       throw new Error("Please provide a valid function");
     }
     const traverse = (node) => {
-      if (!node) {
+      if (node === null) {
         return;
       }
       callback(node.value);
@@ -171,7 +171,7 @@ class Tree {
       throw new Error("Please provide a valid function");
     }
     const traverse = (node) => {
-      if (!node) {
+      if (node === null) {
         return;
       }
       traverse(node.left);
@@ -216,7 +216,7 @@ class Tree {
 
   isBalanced() {
     const check = (node) => {
-      if (!node) {
+      if (node === null) {
         return 0;
       }
       const leftHeight = check(node.left);
@@ -248,29 +248,56 @@ class Tree {
 }
 
 const test = () => {
-  let array = [];
-  const arraySize = Math.floor(Math.random() * 100);
+  const arraySize = Math.floor(Math.random() * 20) + 10; 
   for (let i = 0; i < arraySize; i++) {
     array.push(Math.floor(Math.random() * 100));
   }
+
   const tree = new Tree();
   tree.buildTree(array);
-  tree.isBalanced();
-  const print = (value) => console.log(value);
+  console.log("Initial Tree:");
+  tree.prettyPrint();
+
+  console.log("\nIs the tree balanced? ➤", tree.isBalanced());
+
+  const print = (value) => process.stdout.write(value + " ");
+  console.log("\nLevel-order:");
   tree.levelOrder(print);
+  console.log("\nPre-order:");
   tree.preOrder(print);
+  console.log("\nPost-order:");
   tree.postOrder(print);
-  tree.inOrder(print)
-  for (let i = 0; i < Math.floor(Math.random() * 10); i++){
-    tree.insert(Math.floor(Math.random() * 10) + 100);
-  }
-  tree.rebalance();
-  tree.isBalanced();
-  tree.levelOrder(print);
-  tree.preOrder(print);
-  tree.postOrder(print);
+  console.log("\nIn-order:");
   tree.inOrder(print);
-  tree.prettyPrint()
+
+  console.log("\n\nInserting values > 100 to unbalance the tree...");
+  for (let i = 0; i < 10; i++) {
+    const bigValue = Math.floor(Math.random() * 50) + 100;
+    tree.insert(bigValue);
+    process.stdout.write(bigValue + " ");
+  }
+
+  console.log("\n\nIs the tree balanced now? ➤", tree.isBalanced());
+
+  console.log("\nTree after unbalancing:");
+  tree.prettyPrint();
+
+  console.log("\nRebalancing the tree...");
+  tree.rebalance();
+
+  console.log("\nIs the tree balanced after rebalance? ➤", tree.isBalanced());
+
+  console.log("\nTree after rebalancing:");
+  tree.prettyPrint();
+  console.log("\nLevel-order:");
+  tree.levelOrder(print);
+  console.log("\nPre-order:");
+  tree.preOrder(print);
+  console.log("\nPost-order:");
+  tree.postOrder(print);
+  console.log("\nIn-order:");
+  tree.inOrder(print);
 };
+
 
 test();
